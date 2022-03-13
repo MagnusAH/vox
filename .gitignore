@@ -1,2 +1,2 @@
-dist/win/*
-!dist/win/res/*
+dist/win/build/*
+dist/win/vox.exe
