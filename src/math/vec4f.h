@@ -17,14 +17,14 @@ union Vec4f
 		float s, t, u, v;
 	};
 	float f[4];
-};
+} __attribute__((aligned (16)));
 
 typedef union Vec4f vec4f_t;
 
-void vec4f_addf(vec4f_t* o, vec4f_t* a, float b);
-void vec4f_subf(vec4f_t* o, vec4f_t* a, float b);
-void vec4f_mulf(vec4f_t* o, vec4f_t* a, float b);
-void vec4f_divf(vec4f_t* o, vec4f_t* a, float b);
+VEC_FUNC void vec4f_addf(vec4f_t* o, vec4f_t* a, float b);
+VEC_FUNC void vec4f_subf(vec4f_t* o, vec4f_t* a, float b);
+VEC_FUNC void vec4f_mulf(vec4f_t* o, vec4f_t* a, float b);
+VEC_FUNC void vec4f_divf(vec4f_t* o, vec4f_t* a, float b);
 
 #define vec4f_add2f(o, a, b) vec2f_add((vec2f_t*)(o), (vec2f_t*)(a), b)
 #define vec4f_sub2f(o, a, b) vec2f_sub((vec2f_t*)(o), (vec2f_t*)(a), b)
@@ -36,12 +36,12 @@ void vec4f_divf(vec4f_t* o, vec4f_t* a, float b);
 #define vec4f_mul3f(o, a, b) vec3f_mul((vec3f_t*)(o), (vec3f_t*)(a), b)
 #define vec4f_div3f(o, a, b) vec3f_div((vec3f_t*)(o), (vec3f_t*)(a), b)
 
-void vec4f_add(vec4f_t* o, vec4f_t* a, vec4f_t* b);
-void vec4f_sub(vec4f_t* o, vec4f_t* a, vec4f_t* b);
-void vec4f_mul(vec4f_t* o, vec4f_t* a, vec4f_t* b);
-void vec4f_div(vec4f_t* o, vec4f_t* a, vec4f_t* b);
-void vec4f_dot(float* o, vec4f_t* a, vec4f_t* b);
-void vec4f_cross(vec4f_t* restrict o, vec4f_t* a, vec4f_t* b);
+VEC_FUNC void vec4f_add(vec4f_t* o, vec4f_t* a, vec4f_t* b);
+VEC_FUNC void vec4f_sub(vec4f_t* o, vec4f_t* a, vec4f_t* b);
+VEC_FUNC void vec4f_mul(vec4f_t* o, vec4f_t* a, vec4f_t* b);
+VEC_FUNC void vec4f_div(vec4f_t* o, vec4f_t* a, vec4f_t* b);
+VEC_FUNC void vec4f_dot(float* o, vec4f_t* a, vec4f_t* b);
+VEC_FUNC void vec4f_cross(vec4f_t* restrict o, vec4f_t* a, vec4f_t* b);
 
 #ifdef VEC_EXT
 	void vec4f_norm(vec4f_t* o, vec4f_t* a);

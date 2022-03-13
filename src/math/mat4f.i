@@ -36,8 +36,8 @@ MAT_FUNC void mat4f_divf(mat4f_t* o, mat4f_t* a, float b)
 
 MAT_FUNC void mat4f_iden(mat4f_t* o)
 {
-	_mm256_store_ps(&o->f[0], _mm256_load_ps(mat4f_identity));
-	_mm256_store_ps(&o->f[8], _mm256_load_ps(mat4f_identity + 8));
+	_mm256_store_ps(&o->f[0], _mm256_load_ps(&mat4f_identity[0]));
+	_mm256_store_ps(&o->f[8], _mm256_load_ps(&mat4f_identity[8]));
 }
 
 MAT_FUNC void mat4f_trans(mat4f_t* o, mat4f_t* a)
@@ -88,23 +88,26 @@ MAT_FUNC void mat4f_inv(mat4f_t* o, mat4f_t* a)
 
 	// compute secondary intermediary groups
 	__m128
-		j0 = _mm_fmsub_ps(i22, i33, _mm_mul_ps(i23, i32)),
-		j1 = _mm_fmsub_ps(i23, i31, _mm_mul_ps(i21, i33)),
-		j2 = _mm_fmsub_ps(i21, i32, _mm_mul_ps(i22, i31)),
-		j3 = _mm_fmsub_ps(i02, i13, _mm_mul_ps(i03, i12)),
-		j4 = _mm_fmsub_ps(i03, i11, _mm_mul_ps(i01, i13)),
-		j5 = _mm_fmsub_ps(i01, i12, _mm_mul_ps(i02, i11));
+		j0 = _mm_sub_ps(_mm_mul_ps(i22, i33), _mm_mul_ps(i23, i32)),
+		j1 = _mm_sub_ps(_mm_mul_ps(i23, i31), _mm_mul_ps(i21, i33)),
+		j2 = _mm_sub_ps(_mm_mul_ps(i21, i32), _mm_mul_ps(i22, i31)),
+		j3 = _mm_sub_ps(_mm_mul_ps(i02, i13), _mm_mul_ps(i03, i12)),
+		j4 = _mm_sub_ps(_mm_mul_ps(i03, i11), _mm_mul_ps(i01, i13)),
+		j5 = _mm_sub_ps(_mm_mul_ps(i01, i12), _mm_mul_ps(i02, i11));
 
 	// compute matrix of minors
 	__m128
-		m0 = _mm_fmadd_ps(i13, j2, _mm_add_ps(_mm_mul_ps(i11 , j0), _mm_mul_ps(i12 , j1))),
-		m1 = _mm_fmadd_ps(i03, j2, _mm_add_ps(_mm_mul_ps(i01 , j0), _mm_mul_ps(i02 , j1))),
-		m2 = _mm_fmadd_ps(i33, j5, _mm_add_ps(_mm_mul_ps(i31 , j3), _mm_mul_ps(i32 , j4))),
-		m3 = _mm_fmadd_ps(i23, j5, _mm_add_ps(_mm_mul_ps(i21 , j3), _mm_mul_ps(i22 , j4)));
+		m0 = _mm_add_ps(_mm_add_ps(_mm_mul_ps(i11 , j0), _mm_mul_ps(i12 , j1)), _mm_mul_ps(i13, j2)),
+		m1 = _mm_add_ps(_mm_add_ps(_mm_mul_ps(i01 , j0), _mm_mul_ps(i02 , j1)), _mm_mul_ps(i03, j2)),
+		m2 = _mm_add_ps(_mm_add_ps(_mm_mul_ps(i31 , j3), _mm_mul_ps(i32 , j4)), _mm_mul_ps(i33, j5)),
+		m3 = _mm_add_ps(_mm_add_ps(_mm_mul_ps(i21 , j3), _mm_mul_ps(i22 , j4)), _mm_mul_ps(i23, j5));
+
+	// calculate determinant intermediary, determinant is [0] - [1] + [2] - [3] of r0 * m0
+	__m128
+		di = _mm_mul_ps(r0, m0);
 
 	// calculate alternating sign inverse determinant for rows 0 and 2
 	__m128
-		di = _mm_mul_ps(r0, m0), // determinant intermediary, determinant is [0] - [1] + [2] - [3] of r0 * m0
 		asid0 = _mm_rcp_ps(
 					_mm_add_ps(
 						_mm_sub_ps(_mm_permute_ps(di, 0b01000100), _mm_permute_ps(di, 0b00010001)),
@@ -112,7 +115,7 @@ MAT_FUNC void mat4f_inv(mat4f_t* o, mat4f_t* a)
 						)
 					);
 
-	// calculate alternating sign inverse determinant for rows 1 and 3
+	// compute alternating sign inverse determinant for rows 1 and 3
 	__m128
 		asid1 = _mm_permute_ps(asid0, 0b00010001);
 
@@ -187,12 +190,12 @@ MAT_FUNC void mat4f_mul(mat4f_t* o, mat4f_t* a, mat4f_t* b)
 	// first row
 	{
 		__m128
-			a0 = _mm_fmadd_ps(
-				_mm_permute_ps(t0, 0b00000000), b0,
+			a0 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t0, 0b00000000), b0),
 				_mm_mul_ps(_mm_permute_ps(t2, 0b00000000), b2)
 			),
-			a1 = _mm_fmadd_ps(
-				_mm_permute_ps(t1, 0b00000000), b1,
+			a1 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t1, 0b00000000), b1),
 				_mm_mul_ps(_mm_permute_ps(t3, 0b00000000), b3)
 			);
 
@@ -202,12 +205,12 @@ MAT_FUNC void mat4f_mul(mat4f_t* o, mat4f_t* a, mat4f_t* b)
 	// second row
 	{
 		__m128
-			a0 = _mm_fmadd_ps(
-				_mm_permute_ps(t0, 0b01010101), b0,
+			a0 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t0, 0b01010101), b0),
 				_mm_mul_ps(_mm_permute_ps(t2, 0b01010101), b2)
 			),
-			a1 = _mm_fmadd_ps(
-				_mm_permute_ps(t1, 0b01010101), b1,
+			a1 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t1, 0b01010101), b1),
 				_mm_mul_ps(_mm_permute_ps(t3, 0b01010101), b3)
 			);
 
@@ -217,12 +220,12 @@ MAT_FUNC void mat4f_mul(mat4f_t* o, mat4f_t* a, mat4f_t* b)
 	// third row
 	{
 		__m128
-			a0 = _mm_fmadd_ps(
-				_mm_permute_ps(t0, 0b10101010), b0,
+			a0 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t0, 0b10101010), b0),
 				_mm_mul_ps(_mm_permute_ps(t2, 0b10101010), b2)
 			),
-			a1 = _mm_fmadd_ps(
-				_mm_permute_ps(t1, 0b10101010), b1,
+			a1 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t1, 0b10101010), b1),
 				_mm_mul_ps(_mm_permute_ps(t3, 0b10101010), b3)
 			);
 
@@ -232,12 +235,12 @@ MAT_FUNC void mat4f_mul(mat4f_t* o, mat4f_t* a, mat4f_t* b)
 	// fourth row
 	{
 		__m128
-			a0 = _mm_fmadd_ps(
-				_mm_permute_ps(t0, 0b11111111), b0,
+			a0 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t0, 0b11111111), b0),
 				_mm_mul_ps(_mm_permute_ps(t2, 0b11111111), b2)
 			),
-			a1 = _mm_fmadd_ps(
-				_mm_permute_ps(t1, 0b11111111), b1,
+			a1 = _mm_add_ps(
+				_mm_mul_ps(_mm_permute_ps(t1, 0b11111111), b1),
 				_mm_mul_ps(_mm_permute_ps(t3, 0b11111111), b3)
 			);
 

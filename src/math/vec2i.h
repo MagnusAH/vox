@@ -21,15 +21,15 @@ union Vec2i
 
 typedef union Vec2i vec2i_t;
 
-void vec2i_addi(vec2i_t* o, vec2i_t* a, int32_t b);
-void vec2i_subi(vec2i_t* o, vec2i_t* a, int32_t b);
-void vec2i_muli(vec2i_t* o, vec2i_t* a, int32_t b);
-void vec2i_divi(vec2i_t* o, vec2i_t* a, int32_t b);
+VEC_FUNC void vec2i_addi(vec2i_t* o, vec2i_t* a, int32_t b);
+VEC_FUNC void vec2i_subi(vec2i_t* o, vec2i_t* a, int32_t b);
+VEC_FUNC void vec2i_muli(vec2i_t* o, vec2i_t* a, int32_t b);
+VEC_FUNC void vec2i_divi(vec2i_t* o, vec2i_t* a, int32_t b);
 
-void vec2i_add(vec2i_t* o, vec2i_t* a, vec2i_t* b);
-void vec2i_sub(vec2i_t* o, vec2i_t* a, vec2i_t* b);
-void vec2i_mul(vec2i_t* o, vec2i_t* a, vec2i_t* b);
-void vec2i_div(vec2i_t* o, vec2i_t* a, vec2i_t* b);
+VEC_FUNC void vec2i_add(vec2i_t* o, vec2i_t* a, vec2i_t* b);
+VEC_FUNC void vec2i_sub(vec2i_t* o, vec2i_t* a, vec2i_t* b);
+VEC_FUNC void vec2i_mul(vec2i_t* o, vec2i_t* a, vec2i_t* b);
+VEC_FUNC void vec2i_div(vec2i_t* o, vec2i_t* a, vec2i_t* b);
 
 #if defined(VECTOR_INLINE) || defined(VECTOR_ALWAYS_INLINE)
 	#include "vec2i.i"

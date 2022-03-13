@@ -1,5 +1,6 @@
-#include <string.h>
 #include <math.h>
+
+#define INLINE inline __attribute__((__always_inline__))
 
 INLINE void mat4f_setProjection(mat4f_t* o, float aspectRatio, float fov, float near, float far)
 {
@@ -46,3 +47,5 @@ INLINE void mat4f_setScale3v(mat4f_t* o, vec3f_t* a)
 	o->m11 = a->y;
 	o->m22 = a->z;
 }
+
+#undef INLINE

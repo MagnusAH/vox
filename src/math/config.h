@@ -8,7 +8,7 @@
 #define MATRIX_INLINE
 // #define MATRIX_ALWAYS_INLINE
 
-// #define INLINE inline __attribute__((__always_inline__))
+#define INLINE inline __attribute__((__always_inline__))
 
 #ifdef MATRIX_COMPILE
 	#ifdef MAT_FUNC
