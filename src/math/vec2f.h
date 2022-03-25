@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdint.h>
+#include "config.h"
+
 #define VEC2F_FMT "{%f, %f}\n"
 #define VEC2F_ARG(v) (v).x, (v).y
 

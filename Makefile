@@ -6,7 +6,7 @@ SRCDIR 		= src
 INCDIR		= include
 OBJDIR 		=
 BINDIR		=
-SUBDIRS		= alloc client common core gl hash math server sys time
+SUBDIRS		= alloc client common core gl gui hash math server sys time
 
 # change this to working drive letter if using wsl (must be lowercase)
 WSL_DRIVE_LETTER = c

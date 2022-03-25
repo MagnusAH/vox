@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include "config.h"
 
 #define VEC4F_FMT "{%f, %f, %f, %f}\n"

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdint.h>
+#include "config.h"
+
 #define VEC3F_FMT "{%f, %f, %f}\n"
 #define VEC3F_ARG(v) (v).x, (v).y, (v).z
 

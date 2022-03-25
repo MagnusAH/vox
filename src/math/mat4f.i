@@ -4,40 +4,50 @@ extern const float mat4f_identity[16];
 
 MAT_FUNC void mat4f_addf(mat4f_t* o, mat4f_t* a, float b)
 {
-	__m256
-		broad = _mm256_broadcast_ss(&b);
-	_mm256_store_ps(&o->f[0], _mm256_add_ps(_mm256_load_ps(&a->f[0]), broad));
-	_mm256_store_ps(&o->f[8], _mm256_add_ps(_mm256_load_ps(&a->f[8]), broad));
+	__m128
+		broad = _mm_broadcast_ss(&b);
+	_mm_store_ps(&o->f[0], _mm_add_ps(_mm_load_ps(&a->f[0]), broad));
+	_mm_store_ps(&o->f[4], _mm_add_ps(_mm_load_ps(&a->f[4]), broad));
+	_mm_store_ps(&o->f[8], _mm_add_ps(_mm_load_ps(&a->f[8]), broad));
+	_mm_store_ps(&o->f[12], _mm_add_ps(_mm_load_ps(&a->f[12]), broad));
 }
 
 MAT_FUNC void mat4f_subf(mat4f_t* o, mat4f_t* a, float b)
 {
-	__m256
-		broad = _mm256_broadcast_ss(&b);
-	_mm256_store_ps(&o->f[0], _mm256_sub_ps(_mm256_load_ps(&a->f[0]), broad));
-	_mm256_store_ps(&o->f[8], _mm256_sub_ps(_mm256_load_ps(&a->f[8]), broad));
+	__m128
+		broad = _mm_broadcast_ss(&b);
+	_mm_store_ps(&o->f[0], _mm_sub_ps(_mm_load_ps(&a->f[0]), broad));
+	_mm_store_ps(&o->f[4], _mm_sub_ps(_mm_load_ps(&a->f[4]), broad));
+	_mm_store_ps(&o->f[8], _mm_sub_ps(_mm_load_ps(&a->f[8]), broad));
+	_mm_store_ps(&o->f[12], _mm_sub_ps(_mm_load_ps(&a->f[12]), broad));
 }
 
 MAT_FUNC void mat4f_mulf(mat4f_t* o, mat4f_t* a, float b)
 {
-	__m256
-		broad = _mm256_broadcast_ss(&b);
-	_mm256_store_ps(&o->f[0], _mm256_mul_ps(_mm256_load_ps(&a->f[0]), broad));
-	_mm256_store_ps(&o->f[8], _mm256_mul_ps(_mm256_load_ps(&a->f[8]), broad));
+	__m128
+		broad = _mm_broadcast_ss(&b);
+	_mm_store_ps(&o->f[0], _mm_mul_ps(_mm_load_ps(&a->f[0]), broad));
+	_mm_store_ps(&o->f[4], _mm_mul_ps(_mm_load_ps(&a->f[4]), broad));
+	_mm_store_ps(&o->f[8], _mm_mul_ps(_mm_load_ps(&a->f[8]), broad));
+	_mm_store_ps(&o->f[12], _mm_mul_ps(_mm_load_ps(&a->f[12]), broad));
 }
 
 MAT_FUNC void mat4f_divf(mat4f_t* o, mat4f_t* a, float b)
 {
-	__m256
-		broad = _mm256_broadcast_ss(&b);
-	_mm256_store_ps(&o->f[0], _mm256_div_ps(_mm256_load_ps(&a->f[0]), broad));
-	_mm256_store_ps(&o->f[8], _mm256_div_ps(_mm256_load_ps(&a->f[8]), broad));
+	__m128
+		broad = _mm_broadcast_ss(&b);
+	_mm_store_ps(&o->f[0], _mm_div_ps(_mm_load_ps(&a->f[0]), broad));
+	_mm_store_ps(&o->f[4], _mm_div_ps(_mm_load_ps(&a->f[4]), broad));
+	_mm_store_ps(&o->f[8], _mm_div_ps(_mm_load_ps(&a->f[8]), broad));
+	_mm_store_ps(&o->f[12], _mm_div_ps(_mm_load_ps(&a->f[12]), broad));
 }
 
 MAT_FUNC void mat4f_iden(mat4f_t* o)
 {
-	_mm256_store_ps(&o->f[0], _mm256_load_ps(&mat4f_identity[0]));
-	_mm256_store_ps(&o->f[8], _mm256_load_ps(&mat4f_identity[8]));
+	_mm_store_ps(&o->f[0], _mm_load_ps(&mat4f_identity[0]));
+	_mm_store_ps(&o->f[4], _mm_load_ps(&mat4f_identity[4]));
+	_mm_store_ps(&o->f[8], _mm_load_ps(&mat4f_identity[8]));
+	_mm_store_ps(&o->f[12], _mm_load_ps(&mat4f_identity[12]));
 }
 
 MAT_FUNC void mat4f_trans(mat4f_t* o, mat4f_t* a)
@@ -148,14 +158,18 @@ MAT_FUNC void mat4f_inv(mat4f_t* o, mat4f_t* a)
 
 MAT_FUNC void mat4f_add(mat4f_t* o, mat4f_t* a, mat4f_t* b)
 {
-	_mm256_store_ps(&o->f[0], _mm256_add_ps(_mm256_load_ps(&a->f[0]), _mm256_load_ps(&b->f[0])));
-	_mm256_store_ps(&o->f[8], _mm256_add_ps(_mm256_load_ps(&a->f[8]), _mm256_load_ps(&b->f[8])));
+	_mm_store_ps(&o->f[0], _mm_add_ps(_mm_load_ps(&a->f[0]), _mm_load_ps(&b->f[0])));
+	_mm_store_ps(&o->f[4], _mm_add_ps(_mm_load_ps(&a->f[4]), _mm_load_ps(&b->f[4])));
+	_mm_store_ps(&o->f[8], _mm_add_ps(_mm_load_ps(&a->f[8]), _mm_load_ps(&b->f[8])));
+	_mm_store_ps(&o->f[12], _mm_add_ps(_mm_load_ps(&a->f[12]), _mm_load_ps(&b->f[12])));
 }
 
 MAT_FUNC void mat4f_sub(mat4f_t* o, mat4f_t* a, mat4f_t* b)
 {
-	_mm256_store_ps(&o->f[0], _mm256_sub_ps(_mm256_load_ps(&a->f[0]), _mm256_load_ps(&b->f[0])));
-	_mm256_store_ps(&o->f[8], _mm256_sub_ps(_mm256_load_ps(&a->f[8]), _mm256_load_ps(&b->f[8])));
+	_mm_store_ps(&o->f[0], _mm_sub_ps(_mm_load_ps(&a->f[0]), _mm_load_ps(&b->f[0])));
+	_mm_store_ps(&o->f[4], _mm_sub_ps(_mm_load_ps(&a->f[4]), _mm_load_ps(&b->f[4])));
+	_mm_store_ps(&o->f[8], _mm_sub_ps(_mm_load_ps(&a->f[8]), _mm_load_ps(&b->f[8])));
+	_mm_store_ps(&o->f[12], _mm_sub_ps(_mm_load_ps(&a->f[12]), _mm_load_ps(&b->f[12])));
 }
 
 MAT_FUNC void mat4f_mul(mat4f_t* o, mat4f_t* a, mat4f_t* b)

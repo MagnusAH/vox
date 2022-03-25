@@ -2,9 +2,6 @@
 
 #include <stdint.h>
 
-#include <immintrin.h>
-#include <x86intrin.h>
-
 extern uint64_t tsc_frequency;
 extern double tsc_frequencyHz;
 extern double tsc_frequencyKHz;
@@ -19,12 +16,12 @@ void _tsc_calibrate(uint64_t warmup_count, uint64_t sample_count, uint64_t sampl
 
 inline uint64_t rdtsc() {
 	uint64_t rax, rdx;
-	__asm__("rdtsc" : "=a" (rax), "=d" (rdx) :: );
+	__asm__ volatile("rdtsc" : "=a" (rax), "=d" (rdx) :: );
 	return (rdx << 32) | rax;
 }
 
 inline void lfence() {
-	__asm__("lfence" ::: );
+	__asm__ volatile("lfence" ::: );
 }
 
 inline uint64_t tsc_toNano(uint64_t ticks) {

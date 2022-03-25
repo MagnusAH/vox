@@ -12,7 +12,9 @@
 #include "core/filesystem.h"
 #include "gl/shader.h"
 
-#include "math/mat4f.h"
+#include "math/math.h"
+
+#include "time/tsc.h"
 
 uint32_t setupWindow(GLFWwindow**, uint32_t width, uint32_t height);
 
@@ -26,6 +28,8 @@ int main()
 		printf("TSC is not invariant\n");
 		return 1;
 	}
+
+	tsc_calibrate();
 
 	if (!glfwInit()) {
 		printf("Failed to init GLFW\n");
@@ -64,7 +68,7 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, texID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 5);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -126,27 +130,46 @@ int main()
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
+	uint64_t start, end;
+
 	glfwShowWindow(window);
 	while (!glfwWindowShouldClose(window))
 	{
 		// update
+		start = rdtsc();
+		{
+			
+		}
+		end = rdtsc();
+		uint64_t updateTime = end - start;
 
 		// nothing to see here
 
 		// render
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		gls_use(&shader);
+		start = rdtsc();
 		{
-			glBindTexture(GL_TEXTURE_2D, texID);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			gls_use(&shader);
+			{
+				glBindTexture(GL_TEXTURE_2D, texID);
+
+				glBindVertexArray(VAO);
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			}
 		}
+		end = rdtsc();
+		uint64_t drawcallTime = end - start;
 
 		// cycle
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		start = rdtsc();
+		{
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+		end = rdtsc();
+		uint64_t swapTime = end - start;
+		
 	}
 
 	return 0;
@@ -174,6 +197,7 @@ static uint32_t setupWindow(GLFWwindow** window, uint32_t width, uint32_t height
 	}
 
 	glfwMakeContextCurrent(*window);
+	glfwSwapInterval(1);
 
 	if (gl3wInit()) {
 		printf("Error loading OpenGL\n");

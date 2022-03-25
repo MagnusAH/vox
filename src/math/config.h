@@ -1,12 +1,24 @@
 #pragma once
 
+/*
+	COMPILE OPTIONS FOR VECTOR FUNCTIONS
+*/
 // #define VECTOR_COMPILE
 #define VECTOR_INLINE
 // #define VECTOR_ALWAYS_INLINE
 
+/*
+	COMPILE OPTIONS FOR MATRIX FUNCTIONS
+*/
 // #define MATRIX_COMPILE
 #define MATRIX_INLINE
 // #define MATRIX_ALWAYS_INLINE
+
+/*
+	ALIGN MAT3 STRUCT TO NEAREST 16 BYTE BOUNDARY (and use aligned loads and stores)
+*/
+// #define MAT3_ALIGN
+
 
 #define INLINE inline __attribute__((__always_inline__))
 

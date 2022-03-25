@@ -1,10 +1,10 @@
 #pragma once
 
 #define VEC_EXT
-#include <math/vec2f.h>
-#include <math/vec3f.h>
-#include <math/vec4f.h>
+#include "vec2f.h"
+#include "vec3f.h"
+#include "vec4f.h"
 
-#include <math/mat3f.h>
-#include <math/mat4f.h>
-#include <math/util.h>
+#include "mat3f.h"
+#include "mat4f.h"
+#include "util.h"
