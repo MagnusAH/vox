@@ -16,6 +16,8 @@
 
 #include "time/tsc.h"
 
+#include "gui/gui_value.h"
+
 uint32_t setupWindow(GLFWwindow**, uint32_t width, uint32_t height);
 
 int main()
@@ -78,12 +80,23 @@ int main()
 
 	stbi_image_free(image);
 
+	GUI_value_t i_x, i_y, i_width, i_height;
+
+	printf("x = %f, y = %f, width = %f, height = %f\n", i_x.cache, i_y.cache, i_width.cache, i_height.cache);
+
+	// float vertices[] = {
+	// 	 0.5f,  0.5f,  0.0f,  				// top right
+	// 	 0.5f, -0.5f,  0.0f,  				// bottom right
+	// 	-0.5f, -0.5f,  0.0f, 	 			// bottom left
+	// 	-0.5f,  0.5f,  0.0f,      			// top left
+    // };
+
 	float vertices[] = {
-		 0.5f,  0.5f,  0.0f,  				// top right
-		 0.5f, -0.5f,  0.0f,  				// bottom right
-		-0.5f, -0.5f,  0.0f, 	 			// bottom left
-		-0.5f,  0.5f,  0.0f,      			// top left
-    };
+		i_x.cache + i_width.cache, i_y.cache + i_height.cache, 0.0f,
+		i_x.cache + i_width.cache, i_y.cache, 0.0f,
+		i_x.cache, i_y.cache, 0.0f,
+		i_x.cache, i_y.cache + i_height.cache, 0.0f,
+	};
 	float texCoords[] = {
 		1.0f, 0.0f,
 		1.0f, 1.0f,
