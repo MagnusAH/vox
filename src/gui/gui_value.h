@@ -3,18 +3,6 @@
 #include <stdint.h>
 
 // 16 bytes
-// width and height in pixels
-struct GUI_framebuffer
-{
-	float ratio;   // framebuffer aspect ratio (width / height)
-	float iwidth;  // framebuffer inverse width (1 / width)
-	float iheight; // framebuffer inverse height (1 / height)
-	float iratio;  // framebuffer inverse aspect ratio (height / width)
-};
-
-typedef struct GUI_framebuffer GUI_framebuffer_t;
-
-// 16 bytes
 // x, y, width, height in OpenGL system
 struct GUI_region
 {
@@ -47,14 +35,6 @@ struct GUI_value
 };
 
 typedef struct GUI_value GUI_value_t;
-
-struct GUI_value
-{
-	GUI_value_update_t update;
-	float cache;
-	
-}
-
 
 inline void GUI_init_value(GUI_value_t* value, float source, GUI_value_update_t func)
 {
